@@ -1,0 +1,23 @@
+﻿@model BurritoBarn.Models.ApproveUsersViewModel
+@{
+    ViewBag.Title = "Approve Users";
+}
+@section scripts
+{
+    @Scripts.Render("~/bundles/approveUsers")
+}
+<h2>Approve Users</h2>
+
+<div class="usersToApproveList">
+    @foreach (var employee in Model.Employees)
+    {
+        <div data-employee-id="@employee.id">
+            <p>
+                @employee.firstName @employee.lastName
+            </p>
+            <i class="fa fa-check fa-2x good"></i>
+            <i class="fa fa-times fa-2x bad"></i>
+        </div>
+    }
+</div>
+

@@ -23,8 +23,12 @@ namespace BurritoBarn
 					  "~/Scripts/bootstrap.js",
 					  "~/Scripts/respond.js"));
 
+			bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+					  "~/Scripts/approveUsers.js"));
+
 			bundles.Add(new StyleBundle("~/Content/css").Include(
 					  "~/Content/bootstrap.css",
+					  "~/Content/font-awesome.css",
 					  "~/Content/site.css"));
 
 			// Set EnableOptimizations to false for debugging. For more information,

@@ -22,3 +22,11 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.good {
+    color: #008000;
+}
+
+.bad {
+    color: #800000;
+}

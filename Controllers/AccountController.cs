@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -19,6 +20,15 @@ namespace BurritoBarn.Controllers
 
 		public AccountController()
 		{
+		}
+
+		public ActionResult ApproveUsers()
+		{
+			var unapprovedUsers = db.Employees.Where(e => !e.isActive.HasValue).ToList();
+			return View(new ApproveUsersViewModel
+			{
+				Employees = unapprovedUsers
+			});
 		}
 
 		//
@@ -48,7 +58,13 @@ namespace BurritoBarn.Controllers
 			switch (result)
 			{
 				case SignInStatus.Success:
-					FormsAuthentication.SetAuthCookie(model.Email, true);
+					var tkt = new FormsAuthenticationTicket(1, model.Email, DateTime.Now, DateTime.Now.AddMinutes(30), model.RememberMe, "whatevers");
+					var cookiestr = FormsAuthentication.Encrypt(tkt);
+					var ck = new HttpCookie(FormsAuthentication.FormsCookieName, cookiestr);
+					if (model.RememberMe)
+					ck.Expires=tkt.Expiration;	
+						ck.Path = FormsAuthentication.FormsCookiePath; 
+					Response.Cookies.Add(ck);
 					return RedirectToLocal(returnUrl);
 				case SignInStatus.LockedOut:
 					return View("Lockout");
@@ -86,8 +102,15 @@ namespace BurritoBarn.Controllers
 					firstName = model.FirstName,
 					lastName = model.LastName
 				};
-				db.Employees.Add(employee);
-				db.SaveChanges();
+				try
+				{
+					db.Employees.Add(employee);
+					db.SaveChanges();
+				}
+				catch (Exception)
+				{
+					return View(model);
+				}
 					
 				//take em to a screen that lets them know they have to wait
 				return RedirectToAction("Awaiting", "Home");
@@ -198,7 +221,7 @@ namespace BurritoBarn.Controllers
 
 		private SignInStatus PasswordSign(string userName, string password)
 		{
-			var user = db.Employees.Where(e => e.emailAddress == userName).FirstOrDefault();
+			var user = db.Employees.FirstOrDefault(e => e.emailAddress == userName);
 			if (user == null)
 			{
 				return SignInStatus.Failure;

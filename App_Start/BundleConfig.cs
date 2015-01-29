@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Optimization;
+using BundleTransformer.Core.Bundles;
 
 namespace BurritoBarn
 {
@@ -28,8 +29,11 @@ namespace BurritoBarn
 
 			bundles.Add(new StyleBundle("~/Content/css").Include(
 					  "~/Content/bootstrap.css",
-					  "~/Content/font-awesome.css",
-					  "~/Content/site.css"));
+					  "~/Content/font-awesome.css"));
+
+			var sassyBundle = new CustomStyleBundle("~/Content/scss");
+			sassyBundle.Include("~/Content/site.scss");
+			bundles.Add(sassyBundle);
 
 			// Set EnableOptimizations to false for debugging. For more information,
 			// visit http://go.microsoft.com/fwlink/?LinkId=301862

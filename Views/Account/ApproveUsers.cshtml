@@ -11,12 +11,18 @@
 <div class="usersToApproveList">
     @foreach (var employee in Model.Employees)
     {
-        <div data-employee-id="@employee.id">
-            <p>
-                @employee.firstName @employee.lastName
-            </p>
-            <i class="fa fa-check fa-2x good"></i>
-            <i class="fa fa-times fa-2x bad"></i>
+        <div data-employee-id="@employee.id" class="row">
+            <div class="col-xs-1">
+                <i class="fa fa-check fa-2x good clickable"></i>    
+            </div>
+            <div class="col-xs-1">
+                <i class="fa fa-times fa-2x bad clickable"></i>
+            </div>
+            <div class="col-xs-12">
+                <p>
+                    @employee.firstName @employee.lastName
+                </p>                
+            </div>
         </div>
     }
 </div>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Burrito Barn</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/scss")
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
@@ -18,15 +19,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Burrito Barn", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @(Request.IsAuthenticated ? Html.ActionLink(String.Format("It's Burrito Time {0}!", User.Identity.GetUserName()), "Index", "Home", new {area = ""}, new {@class = "navbar-brand"}) : Html.ActionLink("Burrito Barn", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"}))
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    @if (Request.IsAuthenticated)
-                    {
-                       <li>@String.Format("Hello {0}!", User.Identity.GetUserName())</li>
-                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

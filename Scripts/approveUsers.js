@@ -13,7 +13,7 @@
 
     ApproveUsers.prototype.approveUser = function(e) {
         var icon = e.target;
-        var id = $(icon).parent().data('employee-id');
+        var id = $(icon).parents('.row').data('employee-id');
 
         $.ajax('/Account/ApproveUser', {
             type: 'POST',
@@ -21,14 +21,14 @@
                 employeeId: id
             },
             success: function () {
-                $(icon).parent().fadeOut();
+                $(icon).parents('.row').fadeOut();
             }
         });
     };
 
     ApproveUsers.prototype.disapproveUser = function (e) {
         var icon = e.target;
-        var id = $(icon).parent().data('employee-id');
+        var id = $(icon).parents('.row').data('employee-id');
 
         $.ajax('/Account/DisapproveUser', {
             type: 'POST',
@@ -36,7 +36,7 @@
                 employeeId: id
             },
             success: function() {
-                $(icon).parent().fadeOut();
+                $(icon).parents('.row').fadeOut();
             }
         });
     };

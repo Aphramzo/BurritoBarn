@@ -18,10 +18,6 @@ namespace BurritoBarn.Controllers
 	{
 		private BurritoBarnContext db = new BurritoBarnContext();
 
-		public AccountController()
-		{
-		}
-
 		public ActionResult ApproveUsers()
 		{
 			var unapprovedUsers = db.Employees.Where(e => !e.isActive.HasValue).ToList();
@@ -29,6 +25,34 @@ namespace BurritoBarn.Controllers
 			{
 				Employees = unapprovedUsers
 			});
+		}
+
+		[HttpPost]
+		public JsonResult ApproveUser(string employeeId)
+		{
+			var user = db.Employees.FirstOrDefault(e => e.id == Convert.ToInt64(employeeId));
+			if (user != null)
+			{
+				user.isActive = true;
+				db.SaveChanges();
+				return Json(true);
+			}
+
+			return Json(false);
+		}
+
+		[HttpPost]
+		public JsonResult DisapproveUser(string employeeId)
+		{
+			var user = db.Employees.FirstOrDefault(e => e.id == Convert.ToInt64(employeeId));
+			if (user != null)
+			{
+				user.isActive = false;
+				db.SaveChanges();
+				return Json(true);
+			}
+
+			return Json(false);
 		}
 
 		//
@@ -103,6 +127,7 @@ namespace BurritoBarn.Controllers
 				}
 				catch (Exception)
 				{
+					ModelState.AddModelError("", "Unable to register with that email address.");
 					return View(model);
 				}
 					
@@ -114,28 +139,6 @@ namespace BurritoBarn.Controllers
 			// If we got this far, something failed, redisplay form
 			return View(model);
 		}
-
-	   
-	 
-		//
-		// GET: /Account/ForgotPasswordConfirmation
-		[AllowAnonymous]
-		public ActionResult ForgotPasswordConfirmation()
-		{
-			return View();
-		}
-
-
-
-		//
-		// GET: /Account/ResetPasswordConfirmation
-		[AllowAnonymous]
-		public ActionResult ResetPasswordConfirmation()
-		{
-			return View();
-		}
-
-
 	 
 		//
 		// POST: /Account/LogOff
@@ -143,7 +146,7 @@ namespace BurritoBarn.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult LogOff()
 		{
-			AuthenticationManager.SignOut();
+			FormsAuthentication.SignOut();
 			return RedirectToAction("Index", "Home");
 		}
 
@@ -156,24 +159,6 @@ namespace BurritoBarn.Controllers
 		}
 
 		#region Helpers
-		// Used for XSRF protection when adding external logins
-		private const string XsrfKey = "XsrfId";
-
-		private IAuthenticationManager AuthenticationManager
-		{
-			get
-			{
-				return HttpContext.GetOwinContext().Authentication;
-			}
-		}
-
-		private void AddErrors(IdentityResult result)
-		{
-			foreach (var error in result.Errors)
-			{
-				ModelState.AddModelError("", error);
-			}
-		}
 
 		private ActionResult RedirectToLocal(string returnUrl)
 		{
@@ -182,35 +167,6 @@ namespace BurritoBarn.Controllers
 				return Redirect(returnUrl);
 			}
 			return RedirectToAction("Index", "Home");
-		}
-
-		internal class ChallengeResult : HttpUnauthorizedResult
-		{
-			public ChallengeResult(string provider, string redirectUri)
-				: this(provider, redirectUri, null)
-			{
-			}
-
-			public ChallengeResult(string provider, string redirectUri, string userId)
-			{
-				LoginProvider = provider;
-				RedirectUri = redirectUri;
-				UserId = userId;
-			}
-
-			public string LoginProvider { get; set; }
-			public string RedirectUri { get; set; }
-			public string UserId { get; set; }
-
-			public override void ExecuteResult(ControllerContext context)
-			{
-				var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
-				if (UserId != null)
-				{
-					properties.Dictionary[XsrfKey] = UserId;
-				}
-				context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
-			}
 		}
 
 		private SignInStatus PasswordSign(string userName, string password)

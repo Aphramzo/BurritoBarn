@@ -58,13 +58,7 @@ namespace BurritoBarn.Controllers
 			switch (result)
 			{
 				case SignInStatus.Success:
-					var tkt = new FormsAuthenticationTicket(1, model.Email, DateTime.Now, DateTime.Now.AddMinutes(30), model.RememberMe, "whatevers");
-					var cookiestr = FormsAuthentication.Encrypt(tkt);
-					var ck = new HttpCookie(FormsAuthentication.FormsCookieName, cookiestr);
-					if (model.RememberMe)
-					ck.Expires=tkt.Expiration;	
-						ck.Path = FormsAuthentication.FormsCookiePath; 
-					Response.Cookies.Add(ck);
+					FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
 					return RedirectToLocal(returnUrl);
 				case SignInStatus.LockedOut:
 					return View("Lockout");

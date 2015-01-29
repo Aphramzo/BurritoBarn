@@ -24,7 +24,7 @@ namespace BurritoBarn
 					  "~/Scripts/bootstrap.js",
 					  "~/Scripts/respond.js"));
 
-			bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+			bundles.Add(new ScriptBundle("~/bundles/approveUsers").Include(
 					  "~/Scripts/approveUsers.js"));
 
 			bundles.Add(new StyleBundle("~/Content/css").Include(

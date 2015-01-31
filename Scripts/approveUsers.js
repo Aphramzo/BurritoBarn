@@ -40,4 +40,7 @@
             }
         });
     };
+
+    var approveUsers = new ApproveUsers();
+    approveUsers.initialize();
 });

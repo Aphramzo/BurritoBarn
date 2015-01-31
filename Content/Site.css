@@ -23,7 +23,7 @@ input, select, textarea {
 .bad {
   color: #800000; }
 
-.clickable {
+i:before {
   cursor: pointer; }
 
 /*# sourceMappingURL=Site.css.map */

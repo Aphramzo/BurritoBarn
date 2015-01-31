@@ -30,24 +30,22 @@ namespace BurritoBarn.Controllers
 		[HttpPost]
 		public JsonResult ApproveUser(string employeeId)
 		{
-			var user = db.Employees.FirstOrDefault(e => e.id == Convert.ToInt64(employeeId));
-			if (user != null)
-			{
-				user.isActive = true;
-				db.SaveChanges();
-				return Json(true);
-			}
-
-			return Json(false);
+			return UpdateEmployeeActive(employeeId, true);
 		}
 
 		[HttpPost]
 		public JsonResult DisapproveUser(string employeeId)
 		{
-			var user = db.Employees.FirstOrDefault(e => e.id == Convert.ToInt64(employeeId));
+			return UpdateEmployeeActive(employeeId, false);
+		}
+
+		private JsonResult UpdateEmployeeActive(string employeeId, bool active)
+		{
+			var employeeIdInt = Convert.ToInt64(employeeId);
+			var user = db.Employees.FirstOrDefault(e => e.id == employeeIdInt);
 			if (user != null)
 			{
-				user.isActive = false;
+				user.isActive = active;
 				db.SaveChanges();
 				return Json(true);
 			}
